@@ -2,7 +2,7 @@
 
 An in-memory caching service with **LRU eviction** and **database synchronization** for efficient data retrieval.
 
-FEATURES:
+## FEATURES:
 - Set max cache size during initialization.
 - Automatically evicts the least recently used (LRU) items when the cache exceeds the size limit.
 - Fetches from cache first; if not found, retrieves from the database.
@@ -12,7 +12,7 @@ FEATURES:
 - Logs all actions (add, remove, eviction, retrieval) for transparency and debugging.
 - Follows industry-standard exception handling practices to ensure robustness and stability.
 
-METHODS SUPPORTED:
+## METHODS SUPPORTED:
 - `add(Entity e1)`: Adds entity, evicts LRU if needed.
 - `remove(Entity e1)`: Removes entity from both the cache and database.
 - `removeAll()`: Clears all entities from both the cache and database.
