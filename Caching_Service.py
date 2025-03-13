@@ -1,6 +1,7 @@
 import logging
 import time
 
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,7 @@ class Entity:
         return f"Entity(id='{self.id}', data='{self.data}')"
 
 class DatabaseService:
-    #Simulates a database service for storing entities.
+    # Simulates a database service for storing entities.
     def __init__(self):
         self.database: Dict[str, Entity] = {}
         self.logger = logging.getLogger(__name__ + '.DatabaseService')
@@ -31,7 +32,6 @@ class DatabaseService:
     def save(self, entity: Entity):
         try:
             self.database[entity.get_id()] = entity
-            self.logger.info(f"Saved to database: {entity}")
         except Exception as e:
             self.logger.error(f"Error saving entity: {str(e)}")
             raise
@@ -40,7 +40,6 @@ class DatabaseService:
         try:
             if entity.get_id() in self.database:
                 del self.database[entity.get_id()]
-                self.logger.info(f"Removed from database: {entity}")
             else:
                 self.logger.info(f"Entity not found in database: {entity}")
         except Exception as e:
@@ -50,7 +49,6 @@ class DatabaseService:
     def clear(self):
         try:
             self.database.clear()
-            self.logger.info("Database cleared")
         except Exception as e:
             self.logger.error(f"Error clearing database: {str(e)}")
             raise
@@ -59,18 +57,18 @@ class DatabaseService:
         try:
             entity = self.database.get(id)
             if entity:
-                self.logger.info(f"Retrieved from database: {entity}")
+                return entity
             else:
                 self.logger.info(f"Entity with ID '{id}' not found in database")
-            return entity
+                return None
         except Exception as e:
             self.logger.error(f"Error getting entity: {str(e)}")
             return None
 
+
 class CacheService:
-    #Caching service with configurable size and least-used eviction policy.
+    # Caching service with configurable size and least-used eviction policy.
     def __init__(self, max_size: int, database_service: DatabaseService):
-   
         if max_size <= 0:
             raise ValueError("Max size must be greater than 0")
             
@@ -81,8 +79,8 @@ class CacheService:
         self.logger = logging.getLogger(__name__ + '.CacheService')
     
     def add(self, entity: Entity):
-        #Add an entity to the internal cache.
-        #Evicts least used entity if cache is full.
+        # Add an entity to the internal cache.
+        # Evicts least used entity if cache is full.
         try:
             # Update access timestamp if entity is already in cache
             if entity.get_id() in self.cache:
@@ -95,13 +93,12 @@ class CacheService:
                 
                 self.cache[entity.get_id()] = entity
                 self.access_timestamps[entity.get_id()] = time.time()
-                self.logger.info(f"Entity added in cache: {entity}")
+                self.logger.info(f"Entity added to cache: {entity}")
         except Exception as e:
             self.logger.error(f"Error adding entity: {str(e)}")
             raise
     
     def remove(self, entity: Entity):
-
         try:
             if entity.get_id() in self.cache:
                 del self.cache[entity.get_id()]
@@ -158,27 +155,25 @@ class CacheService:
     def _evict(self):
         if not self.access_timestamps:
             return
-            
         
+        # Evict the least recently used entity
         oldest_id = min(self.access_timestamps, key=self.access_timestamps.get)
         oldest_entity = self.cache.get(oldest_id)
         
         if oldest_entity:
-            
             del self.cache[oldest_id]
             del self.access_timestamps[oldest_id]
-            
-           
+                       
             self.database_service.save(oldest_entity)
             self.logger.info(f"Evicted entity to database: {oldest_entity}")
         else:
             self.logger.warning("No entity to evict, cache is empty or unexpected behavior")
 
+
 def test_cache_service():
-    #Testing cache service functionality
+    # Testing cache service functionality
     logger.info("Starting Cache Service Test")
     
- 
     db_service = DatabaseService()
     cache_service = CacheService(max_size=2, database_service=db_service)
     
@@ -219,7 +214,6 @@ def test_cache_service():
     cache_service.removeAll()
     assert len(cache_service.cache) == 0
     logger.info("Cache after removeAll: {}".format(cache_service.cache))
-
 
     # Clears Cache
     cache_service.clear()
