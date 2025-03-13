@@ -55,7 +55,7 @@ class DatabaseService:
             self.logger.error(f"Error clearing database: {str(e)}")
             raise
     
-    def get(self, id: str) -> Optional[Entity]:
+    def get(self, id: str):
         try:
             entity = self.database.get(id)
             if entity:
