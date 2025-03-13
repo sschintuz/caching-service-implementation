@@ -21,4 +21,3 @@ An in-memory caching service with **LRU eviction** and **database synchronizatio
 
 ```sh
 git clone https://github.com/sschintuz/caching-service-implementation.git
-cd caching-service-implementation
