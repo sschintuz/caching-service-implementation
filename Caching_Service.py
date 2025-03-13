@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[21]:
-
-
 import logging
 from typing import Dict, Optional, Any
 import time
@@ -265,12 +259,12 @@ def test_cache_service():
     assert len(cache_service.cache) == 0, "Cache should be empty after removeAll"
     logger.info("Cache after removeAll: {}".format(cache_service.cache))
 
-    # Additional Test - Removing non-existing entity
+    # Test - Removing non-existing entity
     non_existing_entity = Entity("99", "Non-Existing Entity")
     cache_service.remove(non_existing_entity)  # Should not throw an error
     logger.info(f"Non-existing entity removal test passed.")
 
-    # Additional Test - Clear Cache
+    # Test - Clear Cache
     cache_service.clear()
     assert len(cache_service.cache) == 0, "Cache should be cleared after clear()"
     logger.info(f"Cache after clear: {cache_service.cache}")
