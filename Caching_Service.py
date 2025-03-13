@@ -91,7 +91,7 @@ class CacheService:
                 self.logger.info(f"Updated access time for entity in cache: {entity}")
             else:
                 # Evicts least used element if cache is full
-                if len(self.cache) > self.max_size:
+                if len(self.cache) > =self.max_size:
                     self._evict()
                 
                 self.cache[entity.get_id()] = entity
