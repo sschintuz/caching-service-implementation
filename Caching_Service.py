@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Any, Dict
 
 # Configure logging
 logging.basicConfig(
@@ -31,6 +32,7 @@ class DatabaseService:
     def save(self, entity: Entity):
         try:
             self.database[entity.get_id()] = entity
+            self.logger.info(f"Entity saved to database: {entity}")
         except Exception as e:
             self.logger.error(f"Error saving entity: {str(e)}")
             raise
@@ -39,6 +41,7 @@ class DatabaseService:
         try:
             if entity.get_id() in self.database:
                 del self.database[entity.get_id()]
+                self.logger.info(f"Entity removed from database: {entity}")
             else:
                 self.logger.info(f"Entity not found in database: {entity}")
         except Exception as e:
@@ -48,6 +51,7 @@ class DatabaseService:
     def clear(self):
         try:
             self.database.clear()
+            self.logger.info("All entities removed from database")
         except Exception as e:
             self.logger.error(f"Error clearing database: {str(e)}")
             raise
@@ -56,6 +60,7 @@ class DatabaseService:
         try:
             entity = self.database.get(id)
             if entity:
+                self.logger.info(f"Entity retrieved from database: {entity}")
                 return entity
             else:
                 self.logger.info(f"Entity with ID '{id}' not found in database")
@@ -87,7 +92,7 @@ class CacheService:
                 self.logger.info(f"Updated access time for entity in cache: {entity}")
             else:
                 # Evicts least used element if cache is full
-                if len(self.cache) > self.max_size:
+                if len(self.cache) >= self.max_size:
                     self._evict()
                 
                 self.cache[entity.get_id()] = entity
@@ -101,8 +106,7 @@ class CacheService:
         try:
             if entity.get_id() in self.cache:
                 del self.cache[entity.get_id()]
-                if entity.get_id() in self.access_timestamps:
-                    del self.access_timestamps[entity.get_id()]
+                del self.access_timestamps[entity.get_id()]
             
             self.database_service.remove(entity)
             self.logger.info(f"Entity removed from cache and database: {entity}")
@@ -162,7 +166,7 @@ class CacheService:
         if oldest_entity:
             del self.cache[oldest_id]
             del self.access_timestamps[oldest_id]
-                       
+            
             self.database_service.save(oldest_entity)
             self.logger.info(f"Evicted entity to database: {oldest_entity}")
         else:
