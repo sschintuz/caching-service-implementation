@@ -124,7 +124,7 @@ class CacheService:
             self.logger.error(f"Error removing all entities: {str(e)}")
             raise
     
-    def get(self, entity: Entity) -> Optional[Entity]:
+    def get(self, entity: Entity):
         try:
             entity_id = entity.get_id()
             
@@ -182,12 +182,12 @@ def test_cache_service():
     db_service = DatabaseService()
     cache_service = CacheService(max_size=2, database_service=db_service)
     
-    # Create test entities
+    # Creates test entities
     e1 = Entity("1", "Data 1")
     e2 = Entity("2", "Data 2")
     e3 = Entity("3", "Data 3")
     
-    # Test add and get
+    # Tests add and get
     cache_service.add(e1)
     cache_service.add(e2)
     cache_service.add(e3)
@@ -210,18 +210,18 @@ def test_cache_service():
     logger.info(f"Get e2: {cache_service.get(e2)}")  
     logger.info(f"Get e3: {cache_service.get(e3)}") 
     
-    # Test remove
+    # Tests remove
     cache_service.remove(e2)
     assert cache_service.get(e2) is None
     logger.info(f"Get e2 after removal: {cache_service.get(e2)}") 
     
-    # Test removeAll
+    # Tests removeAll
     cache_service.removeAll()
     assert len(cache_service.cache) == 0
     logger.info("Cache after removeAll: {}".format(cache_service.cache))
 
 
-    # Clear Cache
+    # Clears Cache
     cache_service.clear()
     assert len(cache_service.cache) == 0
     logger.info(f"Cache after clear: {cache_service.cache}")
