@@ -1,7 +1,6 @@
 import logging
 import time
 
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -79,15 +78,15 @@ class CacheService:
         self.logger = logging.getLogger(__name__ + '.CacheService')
     
     def add(self, entity: Entity):
-        # Add an entity to the internal cache.
+        # Adds an entity to the internal cache.
         # Evicts least used entity if cache is full.
         try:
-            # Update access timestamp if entity is already in cache
+            # Updates access timestamp if entity is already in cache
             if entity.get_id() in self.cache:
                 self.access_timestamps[entity.get_id()] = time.time()
                 self.logger.info(f"Updated access time for entity in cache: {entity}")
             else:
-                # Evict least used element if cache is full
+                # Evicts least used element if cache is full
                 if len(self.cache) > self.max_size:
                     self._evict()
                 
@@ -156,7 +155,7 @@ class CacheService:
         if not self.access_timestamps:
             return
         
-        # Evict the least recently used entity
+        # Evicts the least recently used entity
         oldest_id = min(self.access_timestamps, key=self.access_timestamps.get)
         oldest_entity = self.cache.get(oldest_id)
         
@@ -187,10 +186,10 @@ def test_cache_service():
     cache_service.add(e2)
     cache_service.add(e3)
     
-    # Check cache contents
+    # Checks cache contents
     logger.info(f"Cache contents after adding e3: {cache_service.cache}")
     
-    # Check if e1 was evicted and stored in DB
+    # Checks if e1 was evicted and stored in DB
     evicted_e1 = db_service.get(e1.get_id())  
     assert evicted_e1 is not None
     logger.info(f"e1 stored in DB: {evicted_e1}")
